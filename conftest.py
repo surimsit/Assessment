@@ -1,6 +1,7 @@
 from playwright.sync_api import sync_playwright
 import pytest
 from utils.config import BASE_URL
+from pages.cookie_banner import CookieBanner
 
 
 @pytest.fixture(scope="function")
@@ -9,7 +10,9 @@ def page():
         browser = p.chromium.launch(
             headless=False
         )
-        context = browser.new_context()
+        context = browser.new_context(
+            viewport={"width": 1920, "height": 1080}
+        )
         page = context.new_page()
         yield page
         browser.close()
@@ -44,3 +47,12 @@ def mobile_page(playwright):
     page = context.new_page()
     yield page
     browser.close()
+
+
+@pytest.fixture
+def open_home(page):
+    page.goto(BASE_URL)
+
+    CookieBanner(page).accept_all()
+
+    return page
