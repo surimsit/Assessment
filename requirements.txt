@@ -3,3 +3,4 @@ playwright
 pytest-playwright
 pytest-html
 python-dotenv
+imap-tools
