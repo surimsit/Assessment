@@ -41,17 +41,18 @@ def pytest_runtest_makereport(item, call):
 
 
 @pytest.fixture
-def mobile_page(playwright):
-    device = playwright.devices["Pixel 7"]
-    browser = playwright.chromium.launch(
-        headless=False
-    )
-    context = browser.new_context(
-        **device
-    )
-    page = context.new_page()
-    yield page
-    browser.close()
+def mobile_page():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(
+            channel="chrome",
+            headless=False
+        )
+        pixel = p.devices["Pixel 7"]
+        context = browser.new_context(**pixel)
+        page = context.new_page()
+        page.goto("https://www.stumbleguys.com")
+        yield page
+        browser.close()
 
 
 @pytest.fixture

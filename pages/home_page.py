@@ -1,8 +1,18 @@
 from pages.base_page import BasePage
+from pages.game_page import GamePage
+from playwright.sync_api import Page
 
 
 class HomePage(BasePage):
     PROFILE_MENU = "img[alt='avatar']"
+
+    def __init__(self, page: Page):
+        self.page = page
+
+        self.play_button = page.get_by_role(
+            "link",
+            name="Play"
+        )
 
     def open_profile_menu(self):
         self.page.locator(
@@ -37,3 +47,7 @@ class HomePage(BasePage):
         return self.page.locator(
             self.PROFILE_MENU
         ).first.is_visible()
+
+    def open_game(self):
+        self.page.locator('a[href="/play"]').first.click()
+        return GamePage(self.page)
